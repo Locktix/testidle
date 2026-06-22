@@ -59,6 +59,42 @@
     animation:hintpulse 1.3s ease-in-out infinite;transition:opacity .5s;
   }
   @keyframes hintpulse{50%{opacity:.4;}}
+  .fame-chip{
+    margin-top:7px;pointer-events:auto;cursor:pointer;border:none;
+    display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;
+    background:var(--panel);border:1px solid rgba(255,210,63,.35);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    font-family:'Anton',sans-serif;font-size:13px;letter-spacing:.06em;color:var(--gold);
+    text-shadow:0 0 10px rgba(255,210,63,.5);box-shadow:0 0 16px rgba(255,210,63,.18);
+    transition:transform .1s ease;
+  }
+  .fame-chip:active{transform:scale(.93);}
+  .fame-chip .rdy{width:8px;height:8px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 9px var(--green);display:none;}
+  .fame-chip.ready{border-color:rgba(55,255,180,.6);}
+  .fame-chip.ready .rdy{display:inline-block;animation:bdg 1s infinite;}
+
+  /* prestige sheet bits */
+  .pr-hero{text-align:center;padding:6px 0 16px;}
+  .pr-hero .big{font-family:'Anton',sans-serif;font-size:clamp(44px,16vw,80px);line-height:.9;
+    color:var(--gold);text-shadow:0 0 28px rgba(255,210,63,.6);}
+  .pr-hero .sub{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,236,255,.6);margin-top:4px;}
+  .pr-rows{display:grid;gap:10px;margin-bottom:16px;}
+  .pr-row{display:flex;justify-content:space-between;align-items:center;
+    background:rgba(255,255,255,.04);border:1px solid var(--panel-brd);border-radius:14px;padding:12px 15px;}
+  .pr-row .l{font-size:13px;letter-spacing:.04em;color:rgba(244,236,255,.65);text-transform:uppercase;}
+  .pr-row .v{font-family:'Anton',sans-serif;font-size:20px;color:var(--ink);}
+  .pr-row .v.gain{color:var(--green);text-shadow:0 0 12px rgba(55,255,180,.5);}
+  .pr-btn{
+    width:100%;border:none;border-radius:18px;padding:18px;cursor:pointer;
+    font-family:'Anton',sans-serif;font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:#1a0a04;
+    background:linear-gradient(135deg,var(--gold),#ff8a3d);
+    box-shadow:0 0 30px rgba(255,210,63,.5);transition:transform .1s ease,filter .2s;
+  }
+  .pr-btn:active{transform:scale(.97);}
+  .pr-btn:disabled{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35);box-shadow:none;cursor:default;}
+  .pr-btn.confirm{background:linear-gradient(135deg,#ff2d75,#ff5200);color:#fff;animation:bdg .7s infinite;}
+  .pr-note{font-size:12px;color:rgba(244,236,255,.45);text-align:center;margin-top:12px;line-height:1.5;}
 
   /* combo / hit popups projected over canvas */
   #popups{position:fixed;inset:0;z-index:8;pointer-events:none;overflow:hidden;}
@@ -73,6 +109,36 @@
     18%{opacity:1;transform:translate(-50%,-90%) scale(1.12);}
     100%{opacity:0;transform:translate(-50%,-220%) scale(.95);}
   }
+
+  /* ===== Combo meter ===== */
+  #combo{
+    position:fixed;left:50%;top:27%;transform:translateX(-50%);z-index:9;
+    pointer-events:none;text-align:center;opacity:0;transition:opacity .25s;
+    filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));
+  }
+  #combo.on{opacity:1;}
+  #combo .n{
+    font-family:'Anton',sans-serif;line-height:.85;
+    font-size:clamp(46px,17vw,92px);
+    color:var(--c,var(--magenta));
+    text-shadow:0 0 26px var(--c,var(--magenta-glow)),0 0 6px rgba(255,255,255,.4);
+  }
+  #combo .n small{font-size:.42em;opacity:.85;margin-left:.04em;}
+  #combo.bump .n{animation:cbump .19s cubic-bezier(.3,1.6,.5,1);}
+  @keyframes cbump{0%{transform:scale(.82);}55%{transform:scale(1.22);}100%{transform:scale(1);}}
+  #combo .x{
+    font-family:'Anton',sans-serif;font-size:clamp(15px,4.6vw,22px);
+    letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-top:2px;
+    text-shadow:0 0 14px rgba(255,210,63,.6);
+  }
+  #combo .bar{
+    width:min(46vw,180px);height:7px;border-radius:4px;margin:9px auto 0;
+    background:rgba(255,255,255,.14);overflow:hidden;
+    box-shadow:inset 0 0 6px rgba(0,0,0,.5);
+  }
+  #combo .bar i{display:block;height:100%;width:100%;border-radius:4px;
+    background:linear-gradient(90deg,var(--c,var(--magenta)),var(--gold));
+    transform-origin:left;transition:transform .08s linear;}
 
   /* ===== Bottom upgrade dock ===== */
   .dock{
@@ -137,6 +203,107 @@
   .g-toast .h{font-family:'Anton',sans-serif;color:var(--cyan);letter-spacing:.2em;font-size:14px;}
   .g-toast .v{font-family:'Anton',sans-serif;color:var(--gold);font-size:26px;margin-top:4px;}
   @keyframes toast{0%{opacity:0;transform:translate(-50%,10px);}10%,80%{opacity:1;transform:translate(-50%,0);}100%{opacity:0;transform:translate(-50%,-12px);}}
+
+  /* ===== Corner menu buttons ===== */
+  .corner{
+    position:fixed;top:calc(env(safe-area-inset-top) + 12px);z-index:12;
+    width:50px;height:50px;border:none;border-radius:15px;cursor:pointer;
+    background:var(--panel);border:1px solid var(--panel-brd);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    box-shadow:0 6px 20px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);
+    display:grid;place-items:center;font-size:23px;
+    transition:transform .1s ease;
+  }
+  .corner:active{transform:scale(.9);}
+  #btnStats{left:14px;}
+  #btnQuests{right:14px;}
+  .corner .badge{
+    position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;
+    border-radius:10px;background:var(--magenta);color:#fff;
+    font-family:'Anton',sans-serif;font-size:12px;display:none;place-items:center;
+    box-shadow:0 0 12px var(--magenta-glow);animation:bdg 1s ease-in-out infinite;
+  }
+  .corner .badge.show{display:grid;}
+  @keyframes bdg{50%{transform:scale(1.15);}}
+
+  /* ===== Bottom sheet ===== */
+  #sheetWrap{position:fixed;inset:0;z-index:25;display:none;}
+  #sheetWrap.open{display:block;}
+  #sheetWrap .bd{position:absolute;inset:0;background:rgba(5,3,10,.6);backdrop-filter:blur(3px);
+    animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+  .sheet{
+    position:absolute;left:0;right:0;bottom:0;max-height:82vh;overflow-y:auto;
+    background:linear-gradient(180deg,#1a0e2e,#0d0718);
+    border-top-left-radius:26px;border-top-right-radius:26px;
+    border-top:1px solid var(--panel-brd);
+    box-shadow:0 -16px 50px rgba(0,0,0,.6);
+    padding:10px 16px calc(env(safe-area-inset-bottom) + 24px);
+    animation:slideUp .3s cubic-bezier(.2,.9,.3,1);
+  }
+  @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .sheet .grip{width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);margin:6px auto 12px;}
+  .sheet h2{font-family:'Anton',sans-serif;letter-spacing:.12em;text-transform:uppercase;
+    font-size:22px;color:var(--ink);margin-bottom:14px;text-align:center;}
+  .sheet h2 span{color:var(--cyan);text-shadow:0 0 14px var(--cyan);}
+
+  /* quest rows */
+  .quest{
+    display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;
+    background:rgba(255,255,255,.04);border:1px solid var(--panel-brd);border-radius:16px;
+  }
+  .quest.done{border-color:rgba(55,255,180,.4);}
+  .quest .qi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;
+    background:radial-gradient(circle at 50% 35%,rgba(255,45,117,.4),transparent 70%);flex:0 0 auto;}
+  .quest .qb{flex:1;min-width:0;}
+  .quest .qn{font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink);}
+  .quest .qd{font-size:12px;color:rgba(244,236,255,.55);margin-bottom:6px;}
+  .quest .qbar{height:7px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;}
+  .quest .qbar i{display:block;height:100%;border-radius:4px;
+    background:linear-gradient(90deg,var(--magenta),var(--gold));}
+  .quest .qr{font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);margin-top:5px;}
+  .quest .claim{
+    flex:0 0 auto;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;
+    font-family:'Anton',sans-serif;font-size:13px;letter-spacing:.06em;color:#0d0718;
+    background:linear-gradient(135deg,var(--green),#00e5ff);box-shadow:0 0 18px rgba(55,255,180,.5);
+  }
+  .quest .claim:active{transform:scale(.94);}
+  .quest .claim:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);box-shadow:none;cursor:default;}
+  .quest.claimed .claim{background:rgba(55,255,180,.15);color:var(--green);box-shadow:none;}
+
+  /* stat cards */
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .stat{background:rgba(255,255,255,.04);border:1px solid var(--panel-brd);border-radius:16px;padding:13px;}
+  .stat .sl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,236,255,.5);}
+  .stat .sv{font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);margin-top:3px;line-height:1;}
+  .stat.cy .sv{color:var(--cyan);} .stat.mg .sv{color:var(--magenta);} .stat.gr .sv{color:var(--green);}
+
+  /* ===== Combo perks ===== */
+  #frenzy{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .3s;
+    box-shadow:inset 0 0 140px 30px rgba(255,45,117,.55);}
+  #frenzy.on{opacity:1;animation:frz 1.1s ease-in-out infinite;}
+  @keyframes frz{50%{box-shadow:inset 0 0 180px 50px rgba(255,210,63,.6);}}
+  #frenzyTag{
+    position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:11;pointer-events:none;
+    font-family:'Anton',sans-serif;letter-spacing:.14em;font-size:16px;display:none;
+    color:var(--gold);text-shadow:0 0 16px var(--magenta-glow);text-transform:uppercase;
+  }
+  #frenzyTag.on{display:block;}
+  #perkBanner{
+    position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.6);z-index:21;
+    pointer-events:none;text-align:center;opacity:0;
+  }
+  #perkBanner.show{animation:perk 1.4s cubic-bezier(.2,1.4,.4,1) forwards;}
+  @keyframes perk{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-6deg);}
+    20%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(2deg);}
+    75%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0);}
+    100%{opacity:0;transform:translate(-50%,-130%) scale(.95);}
+  }
+  #perkBanner .pt{font-family:'Anton',sans-serif;font-size:clamp(40px,14vw,72px);line-height:.9;
+    color:var(--magenta);text-shadow:0 0 30px var(--magenta-glow),0 0 8px #fff;}
+  #perkBanner .ps{font-family:'Anton',sans-serif;font-size:clamp(16px,5vw,24px);color:var(--gold);
+    letter-spacing:.1em;text-shadow:0 0 14px rgba(255,210,63,.6);margin-top:4px;}
 </style>
 </head>
 <body>
@@ -149,9 +316,32 @@
   <div class="money"><span class="cur">$</span><span id="money">0</span></div>
   <div class="rate">+<b id="rate">0</b>/s · idle</div>
   <div class="tap-hint" id="tapHint">👆 Tape l'écran pour frapper</div>
+  <button class="fame-chip no-punch" id="fameChip"><span class="rdy"></span>⭐ <span id="fameMult">×1.0</span></button>
 </div>
 
 <div id="popups"></div>
+
+<button class="corner no-punch" id="btnStats">📊</button>
+<button class="corner no-punch" id="btnQuests">🏆<span class="badge" id="qBadge">0</span></button>
+
+<div id="frenzy"></div>
+<div id="frenzyTag" class="no-punch"></div>
+<div id="perkBanner"><div class="pt" id="perkT">RAGE</div><div class="ps" id="perkS"></div></div>
+
+<div id="sheetWrap" class="no-punch">
+  <div class="bd" id="sheetBd"></div>
+  <div class="sheet">
+    <div class="grip"></div>
+    <h2 id="sheetTitle"></h2>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<div id="combo">
+  <div class="n"><span id="comboN">0</span><small>×</small></div>
+  <div class="x">Combo · ×<span id="comboMult">1.0</span> $</div>
+  <div class="bar"><i id="comboBar"></i></div>
+</div>
 
 <div class="dock">
   <button class="up" id="up-force" style="--c:var(--magenta)">
@@ -191,6 +381,10 @@ const state = {
   stamina: 1,  // punch speed tier
   income: 1,   // money multiplier tier
   lastSeen: Date.now(),
+  stats: { punches:0, manual:0, bestCombo:0, earned:0, started:Date.now() },
+  quests: {},  // id -> claimed
+  fame: 0,     // prestige points (permanent)
+  run: 0,      // money earned this run (drives next prestige)
 };
 
 const COST = {
@@ -200,8 +394,16 @@ const COST = {
 };
 const damage      = () => state.force;
 const incomeMult  = () => 1 + 0.25 * (state.income - 1);
-const moneyPerHit = () => damage() * incomeMult();
+const fameMult    = () => 1 + 0.10 * state.fame;           // +10% income / Renommée
+const moneyPerHit = () => damage() * incomeMult() * fameMult();
 const punchRate   = () => 0.9 + 0.13 * (state.stamina - 1); // punches / sec
+
+// prestige: points gained on reset, from money earned this run
+const PRESTIGE_BASE = 1e4;
+const prestigeGain  = () => Math.floor(Math.sqrt(Math.max(0, state.run) / PRESTIGE_BASE));
+
+// single money sink: balance + lifetime + this-run all at once
+function gainMoney(a){ state.money += a; state.stats.earned += a; state.run += a; }
 
 function load(){
   try{
@@ -212,8 +414,15 @@ function load(){
     // offline earnings
     const dt = Math.min((Date.now() - (s.lastSeen||Date.now()))/1000, 8*3600);
     const earned = dt * moneyPerHit() * punchRate();
-    if(earned > 1){ state.money += earned; pendingOffline = earned; }
+    if(earned > 1){ state.money += earned; pendingOffline = earned; state.stats.earned += earned; state.run += earned; }
   }catch(e){}
+}
+// guarantee nested defaults survive older saves
+function normalize(){
+  state.stats  = Object.assign({ punches:0, manual:0, bestCombo:0, earned:0, started:Date.now() }, state.stats||{});
+  state.quests = state.quests || {};
+  state.fame = state.fame || 0;
+  state.run  = state.run  || 0;
 }
 function save(){
   state.lastSeen = Date.now();
@@ -221,6 +430,7 @@ function save(){
 }
 let pendingOffline = 0;
 load();
+normalize();
 
 /* ===================================================================
    THREE.JS SCENE
@@ -300,59 +510,141 @@ const MAT = {
   bag:    new THREE.MeshStandardMaterial({ color:0x7a1030, roughness:.55, metalness:.15 }),
   bagband:new THREE.MeshStandardMaterial({ color:0xffd23f, emissive:0x8a6a00, emissiveIntensity:.7, roughness:.4 }),
   chain:  new THREE.MeshStandardMaterial({ color:0x888899, metalness:.9, roughness:.3 }),
+  hair:   new THREE.MeshStandardMaterial({ color:0x1a120e, roughness:.85 }),
+  wrap:   new THREE.MeshStandardMaterial({ color:0xf4ecff, roughness:.7 }),
+  rope:   new THREE.MeshStandardMaterial({ color:0xf4ecff, roughness:.6 }),
+  ropeR:  new THREE.MeshStandardMaterial({ color:0xff2d75, emissive:0x6a0030, emissiveIntensity:.5, roughness:.5 }),
+  padR:   new THREE.MeshStandardMaterial({ color:0xff2d75, roughness:.5, metalness:.2 }),
+  padB:   new THREE.MeshStandardMaterial({ color:0x00e5ff, roughness:.5, metalness:.2 }),
+  post:   new THREE.MeshStandardMaterial({ color:0x2a2438, metalness:.8, roughness:.35 }),
 };
 const cap = (r,h,m)=>{ const g=new THREE.CapsuleGeometry(r,h,6,12); const me=new THREE.Mesh(g,m); me.castShadow=true; return me; };
 const box = (w,h,d,m)=>{ const me=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m); me.castShadow=true; return me; };
 const sph = (r,m)=>{ const me=new THREE.Mesh(new THREE.SphereGeometry(r,16,16),m); me.castShadow=true; return me; };
 
 /* ===================================================================
-   BOXER RIG  (faces +Z toward bag)
+   BOXER RIG — stickman -> buff (capped), detailed muscles (faces +Z)
 =================================================================== */
 const boxer = new THREE.Group(); scene.add(boxer);
 
-// torso
-const torso = cap(0.34, 0.55, MAT.trunk); torso.position.y = 1.5; boxer.add(torso);
-const beltTrim = box(0.7,0.12,0.42, MAT.trim); beltTrim.position.y=1.22; boxer.add(beltTrim);
-// hips/shorts
-const hips = box(0.62,0.4,0.42, MAT.trunk); hips.position.y=1.05; boxer.add(hips);
+// physique scaling: 0 = skinny stickman, 1 = max buff (hard cap)
+const physiqueUpdaters = [];
+function scalable(mesh, min, max){
+  if(Array.isArray(min)){
+    physiqueUpdaters.push(p=>mesh.scale.set(
+      min[0]+(max[0]-min[0])*p, min[1]+(max[1]-min[1])*p, min[2]+(max[2]-min[2])*p));
+  } else {
+    physiqueUpdaters.push(p=>mesh.scale.setScalar(min+(max-min)*p));
+  }
+  return mesh;
+}
+// muscle that lerps BOTH position and scale with physique, so it hugs the
+// thin skeleton when skinny and bulges OUTWARD as it grows (no floating).
+function lerpPart(mesh, parent, posMin, posMax, sMin, sMax){
+  parent.add(mesh);
+  const arr = Array.isArray(sMin);
+  physiqueUpdaters.push(p=>{
+    mesh.position.set(
+      posMin[0]+(posMax[0]-posMin[0])*p,
+      posMin[1]+(posMax[1]-posMin[1])*p,
+      posMin[2]+(posMax[2]-posMin[2])*p);
+    if(arr) mesh.scale.set(
+      sMin[0]+(sMax[0]-sMin[0])*p, sMin[1]+(sMax[1]-sMin[1])*p, sMin[2]+(sMax[2]-sMin[2])*p);
+    else mesh.scale.setScalar(sMin+(sMax-sMin)*p);
+  });
+  return mesh;
+}
+const blob = (r,parent,posMin,posMax,sMin,sMax)=>
+  lerpPart(sph(r,MAT.skin), parent, posMin, posMax, sMin, sMax);
 
-// head
-const head = sph(0.24, MAT.skin); head.position.y=2.08; boxer.add(head);
-const headguard = new THREE.Mesh(new THREE.TorusGeometry(0.25,0.05,8,20), MAT.glove);
-headguard.position.set(0,2.12,0); headguard.rotation.x=Math.PI/2; boxer.add(headguard);
+// --- pelvis / shorts ---
+const hips = box(0.6,0.4,0.4, MAT.trunk); hips.position.y=1.05; boxer.add(hips);
+const beltTrim = box(0.66,0.1,0.44, MAT.trim); beltTrim.position.y=1.24; boxer.add(beltTrim);
 
-// legs
+// --- torso (bare skin so muscles show) ---
+const torso = cap(0.27,0.46,MAT.skin); torso.position.y=1.55; boxer.add(torso);
+scalable(torso, [0.62,1,0.55], [1.18,1.05,1.0]);
+
+// lats (back width) — tuck to torso sides when skinny, flare out when buff
+blob(0.22, boxer, [-0.14,1.5,-0.05],[-0.3,1.5,-0.05], [0.2,0.5,0.4],[1.05,1.25,0.85]);
+blob(0.22, boxer, [ 0.14,1.5,-0.05],[ 0.3,1.5,-0.05], [0.2,0.5,0.4],[1.05,1.25,0.85]);
+// pecs
+blob(0.19, boxer, [-0.12,1.68,0.11],[-0.16,1.68,0.2], 0.1, 1.0);
+blob(0.19, boxer, [ 0.12,1.68,0.11],[ 0.16,1.68,0.2], 0.1, 1.0);
+// abs (6-pack)
+for(let r=0;r<3;r++) for(let c=-1;c<=1;c+=2){
+  const y = 1.45 - r*0.14;
+  const ab = box(0.12,0.12,0.1, MAT.skin); ab.castShadow=true;
+  lerpPart(ab, boxer, [c*0.07,y,0.12],[c*0.1,y,0.22], [0.3,0.3,0.2],[1,1,1]);
+}
+// obliques
+blob(0.12, boxer, [-0.13,1.34,0.08],[-0.2,1.34,0.13], [0.1,0.4,0.2],[1,1,0.7]);
+blob(0.12, boxer, [ 0.13,1.34,0.08],[ 0.2,1.34,0.13], [0.1,0.4,0.2],[1,1,0.7]);
+
+// --- neck + traps + head ---
+const neck = cap(0.1,0.1,MAT.skin); neck.position.y=1.92; boxer.add(neck);
+scalable(neck,[0.6,1,0.6],[1.2,1,1.1]);
+blob(0.13, boxer, [-0.1,1.9,-0.02],[-0.18,1.9,-0.02], [0.1,0.3,0.3],[1,1,1]); // trap L
+blob(0.13, boxer, [ 0.1,1.9,-0.02],[ 0.18,1.9,-0.02], [0.1,0.3,0.3],[1,1,1]); // trap R
+
+const head = sph(0.22, MAT.skin); head.position.y=2.16; boxer.add(head);
+const jaw  = box(0.26,0.14,0.22, MAT.skin); jaw.position.set(0,2.04,0.03); jaw.castShadow=true; boxer.add(jaw);
+const hair = sph(0.225, MAT.hair); hair.position.set(0,2.21,-0.02); hair.scale.set(1,0.78,1); boxer.add(hair);
+const headguard = new THREE.Mesh(new THREE.TorusGeometry(0.24,0.045,8,20), MAT.glove);
+headguard.position.set(0,2.22,0); headguard.rotation.x=Math.PI/2; boxer.add(headguard);
+
+// --- legs ---
 function leg(x){
   const g = new THREE.Group();
-  const thigh = cap(0.15,0.4,MAT.skin); thigh.position.y=0.78; g.add(thigh);
-  const shin  = cap(0.13,0.4,MAT.skin); shin.position.y=0.32; g.add(shin);
-  const boot  = box(0.26,0.18,0.42,MAT.boot); boot.position.set(0,0.08,0.06); g.add(boot);
+  const thigh = cap(0.13,0.4,MAT.skin); thigh.position.y=0.78; g.add(thigh);
+  scalable(thigh,[0.55,1,0.55],[1.18,1,1.12]);
+  blob(0.16, g, [0,0.82,0.03],[0,0.82,0.1], [0.15,0.5,0.2],[1,1,0.9]);   // quad
+  const shin = cap(0.11,0.38,MAT.skin); shin.position.y=0.34; g.add(shin);
+  scalable(shin,[0.6,1,0.6],[1.06,1,1.0]);
+  blob(0.14, g, [0,0.4,-0.03],[0,0.4,-0.09], [0.2,0.5,0.25],[1,1.1,0.95]); // calf
+  const sock = new THREE.Mesh(new THREE.TorusGeometry(0.12,0.03,8,16),MAT.trim);
+  sock.position.y=0.2; sock.rotation.x=Math.PI/2; g.add(sock);
+  const boot = box(0.24,0.18,0.42,MAT.boot); boot.position.set(0,0.09,0.06); g.add(boot);
   g.position.x = x; boxer.add(g); return g;
 }
-const legL = leg(-0.2), legR = leg(0.22);
-legL.position.z = 0.05; legR.position.z = -0.18; // slight stagger / stance
+const legL = leg(-0.18), legR = leg(0.2);
+legL.position.z = 0.05; legR.position.z = -0.16;
 
-// arms — pivot at shoulder
-function arm(side){ // side: -1 left, +1 right
+// --- arms (pivot at shoulder) ---
+function arm(side){
   const pivot = new THREE.Group();
-  pivot.position.set(0.42*side, 1.72, 0);
-  const upper = cap(0.12,0.32,MAT.skin); upper.position.y=-0.26; pivot.add(upper);
-  const fore  = cap(0.115,0.30,MAT.skin); fore.position.y=-0.62; pivot.add(fore);
-  const glove = sph(0.2,MAT.glove); glove.position.y=-0.92; pivot.add(glove);
-  const wrist = new THREE.Mesh(new THREE.TorusGeometry(0.15,0.04,8,16),MAT.trim);
-  wrist.position.y=-0.8; wrist.rotation.x=Math.PI/2; pivot.add(wrist);
+  pivot.position.set(0.34*side, 1.78, 0);
+  blob(0.16, pivot, [0.01*side,0.02,0],[0.05*side,0.02,0], [0.35,0.4,0.4],[1.05,1,1]);  // deltoid
+  const upper = cap(0.10,0.28,MAT.skin); upper.position.y=-0.26; pivot.add(upper);
+  scalable(upper,[0.5,1,0.5],[1.1,1,1.1]);
+  blob(0.14, pivot, [0,-0.24,0.03],[0,-0.24,0.1],  0.12, 1.0);   // bicep
+  blob(0.13, pivot, [0,-0.28,-0.03],[0,-0.28,-0.1], 0.12, 1.0);  // tricep
+  const fore = cap(0.09,0.26,MAT.skin); fore.position.y=-0.6; pivot.add(fore);
+  scalable(fore,[0.55,1,0.55],[1.06,1,1.06]);
+  blob(0.12, pivot, [0,-0.52,0.02],[0,-0.52,0.06], [0.2,0.6,0.3],[1,1,1]);  // forearm
+  const wrap = cap(0.1,0.1,MAT.wrap); wrap.position.y=-0.8; pivot.add(wrap);
+  const glove = sph(0.19,MAT.glove); glove.position.y=-0.95; pivot.add(glove);
+  scalable(glove,0.85,1.08);
+  const knuckle = box(0.24,0.1,0.1,MAT.glove); knuckle.position.set(0,-0.95,0.14); knuckle.castShadow=true; pivot.add(knuckle);
   boxer.add(pivot);
   return { pivot, glove };
 }
 const armL = arm(-1), armR = arm(1);
 
-// guard pose (resting): elbows in, gloves up near face
-function setGuard(a, side){
-  a.pivot.rotation.set(-1.15, 0.25*side, 0.55*side);
-}
+function setGuard(a, side){ a.pivot.rotation.set(-1.15, 0.25*side, 0.55*side); }
 setGuard(armL,-1); setGuard(armR,1);
 
 boxer.position.z = -0.4;
+
+// physique 0..1 driven by Force level, hard-capped (no infinite hulk)
+const PHYS_CAP_LEVEL = 35;
+const physiqueTarget = () => Math.pow(Math.min((state.force-1)/PHYS_CAP_LEVEL,1), 0.8);
+let physShown = physiqueTarget();
+function updatePhysique(p){
+  for(const f of physiqueUpdaters) f(p);
+  boxer.scale.setScalar(0.93 + 0.13*p);   // overall mass grows, capped
+}
+updatePhysique(physShown);
 
 /* ===================================================================
    HEAVY BAG
@@ -370,6 +662,39 @@ for(let i=0;i<3;i++){
   const band = new THREE.Mesh(new THREE.TorusGeometry(0.43,0.05,8,24), MAT.bagband);
   band.position.y = -0.55 - i*0.5; band.rotation.x=Math.PI/2; bag.add(band);
 }
+
+// --- evolving bag tiers: unlock by current cash, revert if it drops below ---
+const BAG_TIERS = [
+  { min:0,   name:'Sac Cuir',    body:0x7a1030, band:0xffd23f, emi:0x000000, glow:0,   scale:1.00 },
+  { min:1e3, name:'Sac Acier',   body:0x3a5573, band:0x00e5ff, emi:0x004a55, glow:.35, scale:1.07 },
+  { min:1e4, name:'Sac Or',      body:0xb8860b, band:0xfff1a8, emi:0x5a4400, glow:.4,  scale:1.13 },
+  { min:1e5, name:'Sac Néon',    body:0x6a1b7a, band:0xff2d75, emi:0x7a0038, glow:.55, scale:1.19 },
+  { min:1e6, name:'Sac Diamant', body:0x2a9bd8, band:0xeaffff, emi:0x1f6f9c, glow:.6,  scale:1.26 },
+  { min:1e7, name:'Sac Inferno', body:0xd83a1f, band:0xffd23f, emi:0xff5200, glow:.8,  scale:1.35 },
+];
+let bagTier = -1;
+function applyBagTier(i){
+  const t = BAG_TIERS[i];
+  bagBody.material.color.setHex(t.body);
+  bagBody.material.emissive.setHex(t.emi);
+  bagBody.material.emissiveIntensity = t.glow;
+  MAT.bagband.color.setHex(t.band);
+  MAT.bagband.emissive.setHex(t.emi);
+  MAT.bagband.emissiveIntensity = 0.4 + t.glow*0.6;
+  bag.scale.setScalar(t.scale);
+}
+function checkBagTier(){
+  let i = 0;
+  for(let k=BAG_TIERS.length-1;k>=0;k--){ if(state.money >= BAG_TIERS[k].min){ i=k; break; } }
+  if(i === bagTier) return;
+  const up = i > bagTier;
+  bagTier = i;
+  applyBagTier(i);
+  if(up && state.money>0) toast('Nouveau sac débloqué', BAG_TIERS[i].name);
+  else if(!up) toast('Sac rétrogradé', BAG_TIERS[i].name);
+}
+// set starting bag silently (no toast on load)
+(function(){ let i=0; for(let k=BAG_TIERS.length-1;k>=0;k--){ if(state.money>=BAG_TIERS[k].min){ i=k; break; } } bagTier=i; applyBagTier(i); })();
 // support beam
 {
   const beam = box(0.18,0.18,2.2, MAT.chain); beam.position.set(0,3.45,1.4); scene.add(beam);
@@ -377,6 +702,31 @@ for(let i=0;i<3;i++){
 }
 
 let bagSwing = { x:0, z:0, vx:0, vz:0 };
+
+/* ===================================================================
+   BOXING RING  (posts + ropes + corner pads)
+=================================================================== */
+{
+  const H = 2.6, postY = 1.6;
+  const corners = [[-H,-H],[H,-H],[H,H],[-H,H]];
+  const padMats = [MAT.padB, MAT.padB, MAT.padR, MAT.padR];
+  corners.forEach(([x,z],i)=>{
+    const post = box(0.12, postY, 0.12, MAT.post); post.position.set(x, postY/2, z); scene.add(post);
+    const pad  = box(0.2, 1.05, 0.2, padMats[i]); pad.position.set(x, 0.95, z); scene.add(pad);
+    const knob = sph(0.1, MAT.bagband); knob.position.set(x, postY+0.02, z); scene.add(knob);
+  });
+  const ropeY  = [0.55, 0.95, 1.38];
+  const ropeMat= [MAT.ropeR, MAT.rope, MAT.ropeR];
+  for(let e=0;e<4;e++){
+    const a = corners[e], b = corners[(e+1)%4];
+    const alongX = a[1]===b[1];
+    const mx=(a[0]+b[0])/2, mz=(a[1]+b[1])/2, len=2*H;
+    ropeY.forEach((ry,ri)=>{
+      const g = alongX ? new THREE.BoxGeometry(len,0.05,0.05) : new THREE.BoxGeometry(0.05,0.05,len);
+      const rope = new THREE.Mesh(g, ropeMat[ri]); rope.position.set(mx,ry,mz); scene.add(rope);
+    });
+  }
+}
 
 /* ===================================================================
    PARTICLES (impact burst pool)
@@ -413,6 +763,31 @@ let nextManual = true;    // alternate arms on manual taps
 const gloveWorld = new THREE.Vector3();
 const punchAnimSpeed = () => 6.5 + (state.stamina - 1) * 0.7; // taps feel snappier w/ stamina
 
+// ---- COMBO multiplier (manual taps only) ----
+let combo = 0, comboTimer = 0;
+const comboWindow = () => 1.6 + state.stamina * 0.04;          // stamina = more grace time
+const comboMult   = () => 1 + Math.min(combo * 0.12, 6);       // up to ×7
+const comboEl   = document.getElementById('combo');
+const comboNEl  = document.getElementById('comboN');
+const comboMEl  = document.getElementById('comboMult');
+const comboBar  = document.getElementById('comboBar');
+function comboColor(){
+  if(combo >= 40) return 'var(--cyan)';
+  if(combo >= 18) return 'var(--gold)';
+  return 'var(--magenta)';
+}
+function updateComboUI(){
+  if(combo > 0){
+    comboEl.classList.add('on');
+    comboEl.style.setProperty('--c', comboColor());
+    comboNEl.textContent = combo;
+    comboMEl.textContent = comboMult().toFixed(1);
+    comboBar.style.transform = 'scaleX('+Math.max(0, comboTimer/comboWindow())+')';
+  } else {
+    comboEl.classList.remove('on');
+  }
+}
+
 function triggerPunch(manual){
   let right;
   if(manual){ right = nextManual; nextManual = !nextManual; }
@@ -426,25 +801,36 @@ function playerPunch(){
   triggerPunch(true);
 }
 window.addEventListener('pointerdown', (e)=>{
-  if(e.target.closest('.dock')) return;   // don't punch when tapping upgrade buttons
+  if(sheetOpen) return;                                  // menu open, ignore
+  if(e.target.closest('.dock,.no-punch')) return;        // buttons & menus don't punch
   playerPunch();
 }, { passive:true });
 
 let firstTap = true;
 function onImpact(){
   const manual = activePunch.manual;
-  const gain = moneyPerHit() * (manual ? 1.5 : 1);   // reward active play
-  state.money += gain;
+  if(manual){
+    combo++; comboTimer = comboWindow();
+    if(combo > state.stats.bestCombo) state.stats.bestCombo = combo;
+    comboEl.classList.remove('bump'); void comboEl.offsetWidth; comboEl.classList.add('bump');
+    updateComboUI();
+    triggerPerks(combo);
+  }
+  const mult = manual ? comboMult() : 1;
+  const gain = moneyPerHit() * (manual ? 1.5 : 1) * mult * frenzyMult;   // active + combo + perk
+  gainMoney(gain);
+  state.stats.punches++;
+  if(manual) state.stats.manual++;
 
   activePunch.arm.glove.getWorldPosition(gloveWorld);
   burst(gloveWorld, manual);
-  popup(gloveWorld, '+$'+fmt(gain));
+  popup(gloveWorld, '+$'+fmt(gain) + (manual && combo>1 ? '  ×'+mult.toFixed(1) : ''));
 
-  // shove bag (manual hits harder)
-  const power = manual ? 1.5 : 1;
+  // shove bag (manual + combo hits harder)
+  const power = (manual ? 1.5 : 1) + Math.min(combo*0.02, 1);
   bagSwing.vz += (4.2 + damage()*0.04) * power;
   bagSwing.vx += (Math.random()-0.5)*1.5;
-  shake = Math.min(0.3, (manual?0.18:0.12) + damage()*0.002);
+  shake = Math.min(0.36, (manual?0.18:0.12) + damage()*0.002 + Math.min(combo*0.004,0.14));
   ringPulse = 1;
 
   if(manual && firstTap){
@@ -452,6 +838,47 @@ function onImpact(){
     const h = document.getElementById('tapHint');
     if(h){ h.style.opacity='0'; setTimeout(()=>h.remove(), 600); }
   }
+}
+
+/* ===================================================================
+   COMBO PERKS  (frenzy mult, freeze, coin rain)
+=================================================================== */
+let frenzyMult = 1, frenzyTimer = 0, comboFreeze = 0;
+const frenzyEl  = document.getElementById('frenzy');
+const frenzyTag = document.getElementById('frenzyTag');
+const perkEl = document.getElementById('perkBanner');
+const _vp = new THREE.Vector3();
+
+const PERKS = [
+  { at:25,  t:'BOOST',       s:'Cash ×2 · 5s',            run:()=>grantFrenzy(2,5) },
+  { at:50,  t:'RAGE',        s:'Cash ×3 · 6s',            run:()=>{ grantFrenzy(3,6); shake=0.42; } },
+  { at:75,  t:"PLUIE D'OR",  s:'Bonus cash !',            run:()=>coinRain() },
+  { at:100, t:'OVERDRIVE',   s:'Cash ×5 · 8s · combo gelé', run:()=>{ grantFrenzy(5,8); freezeCombo(4); } },
+];
+function triggerPerks(c){
+  for(const p of PERKS){ if(c===p.at){ p.run(); showPerk(p.t,p.s); navigator.vibrate?.([20,40,30]); } }
+  if(c>100 && c%50===0){ coinRain(); showPerk("PLUIE D'OR",'Combo '+c+' !'); navigator.vibrate?.([20,40,30]); }
+}
+function grantFrenzy(m,sec){
+  frenzyMult = Math.max(frenzyMult, m);
+  frenzyTimer = Math.max(frenzyTimer, sec);
+  frenzyEl.classList.add('on'); frenzyTag.classList.add('on');
+}
+function freezeCombo(sec){ comboFreeze = Math.max(comboFreeze, sec); }
+function coinRain(){
+  const total = moneyPerHit() * 30 * frenzyMult;
+  gainMoney(total);
+  bagBody.getWorldPosition(_vp);
+  for(let i=0;i<14;i++) setTimeout(()=>{
+    const off = new THREE.Vector3((Math.random()-.5)*1.7, Math.random()*1.5, (Math.random()-.5)*0.6);
+    popup(_vp.clone().add(off), '+$'+fmt(total/14));
+  }, i*55);
+  burst(_vp, true);
+}
+function showPerk(t,s){
+  document.getElementById('perkT').textContent = t;
+  document.getElementById('perkS').textContent = s;
+  perkEl.classList.remove('show'); void perkEl.offsetWidth; perkEl.classList.add('show');
 }
 
 /* ===================================================================
@@ -469,6 +896,15 @@ function popup(pos3, text){
   el.style.color = Math.random()>0.7 ? 'var(--cyan)' : 'var(--gold)';
   popLayer.appendChild(el);
   setTimeout(()=>el.remove(), 900);
+}
+
+// reusable center toast
+function toast(h, v){
+  const t = document.createElement('div');
+  t.className = 'g-toast';
+  t.innerHTML = '<div class="h">'+h+'</div><div class="v">'+v+'</div>';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3400);
 }
 
 /* ===================================================================
@@ -520,6 +956,27 @@ function animate(){
   // bounce legs slightly
   legL.position.y = Math.max(0, Math.sin(t*3.2)*0.03);
   legR.position.y = Math.max(0, Math.sin(t*3.2+Math.PI)*0.03);
+
+  // ---- physique grows toward Force level (smooth, capped) ----
+  const pt = physiqueTarget();
+  if(Math.abs(pt - physShown) > 0.0005){
+    physShown += (pt - physShown) * Math.min(1, dt*2.5);
+    updatePhysique(physShown);
+  }
+
+  // ---- combo decay (frozen by Overdrive perk) ----
+  if(combo > 0){
+    if(comboFreeze > 0){ comboFreeze -= dt; comboTimer = comboWindow(); }
+    else { comboTimer -= dt; if(comboTimer <= 0){ combo = 0; } }
+    updateComboUI();
+  }
+
+  // ---- frenzy timer ----
+  if(frenzyTimer > 0){
+    frenzyTimer -= dt;
+    frenzyTag.textContent = '⚡ CASH ×'+frenzyMult.toFixed(0)+'  ·  '+Math.ceil(frenzyTimer)+'s';
+    if(frenzyTimer <= 0){ frenzyMult = 1; frenzyEl.classList.remove('on'); frenzyTag.classList.remove('on'); }
+  }
 
   // ---- bag spring physics ----
   const k=18, damp=3.2;
@@ -585,6 +1042,12 @@ function refreshUI(){
     const btn = $('up-'+k);
     btn.classList.toggle('cant', state.money < c);
   }
+  checkBagTier();
+  updateQuestBadge();
+  // fame chip
+  $('fameMult').textContent = '×'+fameMult().toFixed(1);
+  $('fameChip').classList.toggle('ready', prestigeGain() >= 1);
+  if(sheetOpen === 'quests') renderQuests();   // live progress while open
 }
 
 function buy(k){
@@ -600,6 +1063,151 @@ function buy(k){
 ['force','stamina','income'].forEach(k=>{
   $('up-'+k).addEventListener('click', ()=>buy(k));
 });
+
+/* ===================================================================
+   QUESTS
+=================================================================== */
+const QUESTS = [
+  { id:'p100',  ic:'🥊', name:'Frappeur',        desc:'Tape 100 coups',     goal:100,   val:()=>state.stats.punches,   reward:200 },
+  { id:'p1k',   ic:'🥊', name:'Cogneur',         desc:'Tape 1 000 coups',   goal:1000,  val:()=>state.stats.punches,   reward:2500 },
+  { id:'p10k',  ic:'🥊', name:'Machine',         desc:'Tape 10 000 coups',  goal:10000, val:()=>state.stats.punches,   reward:30000 },
+  { id:'c25',   ic:'🔥', name:'Combo Initié',    desc:'Atteins un combo ×25',  goal:25,  val:()=>state.stats.bestCombo, reward:1500 },
+  { id:'c50',   ic:'🔥', name:'Combo Pro',       desc:'Atteins un combo ×50',  goal:50,  val:()=>state.stats.bestCombo, reward:6000 },
+  { id:'c100',  ic:'🔥', name:'Combo Légende',   desc:'Atteins un combo ×100', goal:100, val:()=>state.stats.bestCombo, reward:40000 },
+  { id:'f10',   ic:'💪', name:'Costaud',         desc:'Force niveau 10',    goal:10,    val:()=>state.force,           reward:4000 },
+  { id:'f25',   ic:'💪', name:'Colosse',         desc:'Force niveau 25',    goal:25,    val:()=>state.force,           reward:50000 },
+  { id:'m10k',  ic:'💰', name:'Premier magot',   desc:'Possède $10K',       goal:1e4,   val:()=>state.money,           reward:5000 },
+  { id:'m1m',   ic:'💰', name:'Millionnaire',    desc:'Possède $1M',        goal:1e6,   val:()=>state.money,           reward:150000 },
+];
+const qReady = q => q.val() >= q.goal && !state.quests[q.id];
+function updateQuestBadge(){
+  const n = QUESTS.filter(qReady).length;
+  const b = $('qBadge');
+  b.textContent = n; b.classList.toggle('show', n>0);
+}
+function claimQuest(id){
+  const q = QUESTS.find(x=>x.id===id);
+  if(!q || !qReady(q)) return;
+  state.quests[id] = true;
+  gainMoney(q.reward);
+  navigator.vibrate?.([15,30,15]);
+  toast('Quête validée', '+$'+fmt(q.reward));
+  renderQuests(); refreshUI(); save();
+}
+window.__claimQuest = claimQuest;
+function renderQuests(){
+  $('sheetBody').innerHTML = QUESTS.map(q=>{
+    const v = q.val(), done = v >= q.goal, claimed = !!state.quests[q.id];
+    const pct = Math.min(100, v/q.goal*100);
+    const btn = claimed
+      ? '<button class="claim" disabled>✓</button>'
+      : (done ? '<button class="claim" onclick="__claimQuest(\''+q.id+'\')">Récolter</button>'
+              : '<button class="claim" disabled>'+Math.floor(pct)+'%</button>');
+    return '<div class="quest'+(claimed?' claimed':done?' done':'')+'">'+
+      '<div class="qi">'+q.ic+'</div>'+
+      '<div class="qb"><div class="qn">'+q.name+'</div><div class="qd">'+q.desc+'</div>'+
+      '<div class="qbar"><i style="width:'+pct+'%"></i></div>'+
+      '<div class="qr">Récompense : $'+fmt(q.reward)+'</div></div>'+
+      btn+'</div>';
+  }).join('');
+}
+
+/* ===================================================================
+   STATS
+=================================================================== */
+function fmtTime(ms){
+  const s=Math.floor(ms/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60);
+  return h>0 ? h+'h '+m+'m' : m+'m '+(s%60)+'s';
+}
+function renderStats(){
+  const st = state.stats;
+  const cards = [
+    ['Coups totaux', fmt(st.punches), 'cy'],
+    ['Coups manuels', fmt(st.manual), 'mg'],
+    ['Meilleur combo', '×'+st.bestCombo, 'mg'],
+    ['Total gagné', '$'+fmt(st.earned), 'gr'],
+    ['Revenu idle', '$'+fmt(moneyPerHit()*punchRate())+'/s', 'gr'],
+    ['Cash actuel', '$'+fmt(state.money), ''],
+    ['Force / Stam / Inc', state.force+' / '+state.stamina+' / '+state.income, 'cy'],
+    ['Sac actuel', BAG_TIERS[bagTier].name, 'mg'],
+    ['Renommée ⭐', state.fame+' (+'+Math.round((fameMult()-1)*100)+'%)', 'gr'],
+    ['Temps de jeu', fmtTime(Date.now()-st.started), 'cy'],
+  ];
+  $('sheetBody').innerHTML = '<div class="stats-grid">'+cards.map(c=>
+    '<div class="stat '+c[2]+'"><div class="sl">'+c[0]+'</div><div class="sv">'+c[1]+'</div></div>'
+  ).join('')+'</div>';
+}
+
+/* ===================================================================
+   PRESTIGE (Renommée)
+=================================================================== */
+let prestigeConfirm = false, prestigeConfirmTO = null;
+function renderPrestige(){
+  const g = prestigeGain();
+  const curBonus = Math.round((fameMult()-1)*100);
+  const newBonus = Math.round(((1+0.10*(state.fame+g))-1)*100);
+  const next = (state.fame+1)*(state.fame+1)*PRESTIGE_BASE; // run needed for next +1 from 0
+  const btn = g >= 1
+    ? '<button class="pr-btn '+(prestigeConfirm?'confirm':'')+'" id="prBtn">'+(prestigeConfirm?'Confirmer la renaissance':'Renaître · +'+g+' ⭐')+'</button>'
+    : '<button class="pr-btn" disabled>Gagne plus de cash d\'abord</button>';
+  $('sheetBody').innerHTML =
+    '<div class="pr-hero"><div class="big">⭐ '+state.fame+'</div><div class="sub">Renommée · +'+curBonus+'% revenus</div></div>'+
+    '<div class="pr-rows">'+
+      '<div class="pr-row"><span class="l">Gagné cette carrière</span><span class="v">$'+fmt(state.run)+'</span></div>'+
+      '<div class="pr-row"><span class="l">Renommée à gagner</span><span class="v gain">+'+g+' ⭐</span></div>'+
+      '<div class="pr-row"><span class="l">Nouveau bonus</span><span class="v gain">+'+newBonus+'%</span></div>'+
+    '</div>'+ btn +
+    '<div class="pr-note">Renaître remet à zéro cash, niveaux et sac.<br>Tu gardes Renommée, stats et quêtes — chaque ⭐ = +10% de revenus pour toujours.<br>Prochain seuil : $'+fmt(PRESTIGE_BASE)+' gagnés = 1ʳᵉ ⭐.</div>';
+  const b = document.getElementById('prBtn');
+  if(b) b.addEventListener('click', onPrestigeBtn);
+}
+function onPrestigeBtn(){
+  if(prestigeGain() < 1) return;
+  if(!prestigeConfirm){
+    prestigeConfirm = true;
+    clearTimeout(prestigeConfirmTO);
+    prestigeConfirmTO = setTimeout(()=>{ prestigeConfirm=false; if(sheetOpen==='prestige') renderPrestige(); }, 3000);
+    renderPrestige();
+    return;
+  }
+  doPrestige();
+}
+function doPrestige(){
+  const g = prestigeGain();
+  if(g < 1) return;
+  state.fame += g;
+  // reset run progress
+  state.money = 0; state.force = 1; state.stamina = 1; state.income = 1; state.run = 0;
+  combo = 0; comboTimer = 0; comboFreeze = 0; updateComboUI();
+  frenzyMult = 1; frenzyTimer = 0; frenzyEl.classList.remove('on'); frenzyTag.classList.remove('on');
+  bagTier = -1;                 // re-evaluated to tier 0 by checkBagTier
+  prestigeConfirm = false; clearTimeout(prestigeConfirmTO);
+  refreshUI(); save();
+  toast('Renaissance !', '+'+g+' ⭐ Renommée');
+  closeSheet();
+}
+
+/* ===================================================================
+   BOTTOM SHEET
+=================================================================== */
+let sheetOpen = null;
+const SHEETS = {
+  quests:   { title:'Quêtes · <span>Récompenses</span>',   render:renderQuests },
+  stats:    { title:'Statistiques · <span>Carrière</span>', render:renderStats },
+  prestige: { title:'Prestige · <span>Renommée</span>',    render:renderPrestige },
+};
+function openSheet(which){
+  sheetOpen = which;
+  prestigeConfirm = false;
+  $('sheetTitle').innerHTML = SHEETS[which].title;
+  SHEETS[which].render();
+  $('sheetWrap').classList.add('open');
+}
+function closeSheet(){ sheetOpen = null; $('sheetWrap').classList.remove('open'); }
+$('btnQuests').addEventListener('click', ()=>openSheet('quests'));
+$('btnStats').addEventListener('click', ()=>openSheet('stats'));
+$('fameChip').addEventListener('click', ()=>openSheet('prestige'));
+$('sheetBd').addEventListener('click', closeSheet);
 
 // UI refresh + autosave
 setInterval(refreshUI, 120);
@@ -626,13 +1234,7 @@ refreshUI();
 setTimeout(()=>{ document.getElementById('boot').style.transition='opacity .5s'; document.getElementById('boot').style.opacity='0'; setTimeout(()=>document.getElementById('boot').remove(),500); }, 700);
 
 if(pendingOffline > 1){
-  setTimeout(()=>{
-    const t=document.createElement('div');
-    t.className='g-toast';
-    t.innerHTML='<div class="h">De retour au ring</div><div class="v">+$'+fmt(pendingOffline)+'</div>';
-    document.body.appendChild(t);
-    setTimeout(()=>t.remove(),3400);
-  }, 1000);
+  setTimeout(()=> toast('De retour au ring', '+$'+fmt(pendingOffline)), 1000);
 }
 </script>
 </body>
